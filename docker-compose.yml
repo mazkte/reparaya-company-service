@@ -1,0 +1,61 @@
+# ============================================================
+# ReparaYa — company-service (desarrollo local)
+# Dependencia: reparaya-network debe existir (docker/network/)
+#
+# Uso:
+#   docker compose up -d
+#   docker compose logs -f
+# ============================================================
+
+services:
+
+  company-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      secrets:
+        - maven_settings        # token para descargar reparaya-shared
+    image: reparaya/company-service:latest
+    container_name: reparaya-company-service
+    restart: unless-stopped
+    ports:
+      - "8083:8083"
+    environment:
+      # ── Base de datos (Neon PostgreSQL) ──────────────────
+      DB_URL: ${DB_URL}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+
+      # ── Keycloak ─────────────────────────────────────────
+      KEYCLOAK_URL: http://reparaya-keycloak:8080
+      KEYCLOAK_REALM: reparaya
+
+      # ── JVM ──────────────────────────────────────────────
+      JAVA_OPTS: "-Xms256m -Xmx512m"
+      SPRING_PROFILES_ACTIVE: "dev"
+    networks:
+      - reparaya-net
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.company.rule=PathPrefix(`/api/companies`)"
+      - "traefik.http.routers.company.entrypoints=web"
+      - "traefik.http.routers.company.middlewares=cors-headers,rate-limit"
+      - "traefik.http.services.company.loadbalancer.server.port=8083"
+      - "traefik.docker.network=reparaya-network"
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:8083/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+
+networks:
+  reparaya-net:
+    external: true
+    name: reparaya-network
+
+# ── Secret: settings.xml con token de GitHub Packages ────────
+# Crear el archivo ~/.m2/settings.xml en tu máquina antes de hacer build
+secrets:
+  maven_settings:
+    file: ${MAVEN_SETTINGS_PATH:-~/.m2/settings.xml}

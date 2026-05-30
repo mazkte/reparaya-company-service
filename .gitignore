@@ -1,0 +1,14 @@
+target/
+*.class
+*.jar
+*.war
+.idea/
+*.iml
+.vscode/
+.settings/
+.classpath
+.project
+*.log
+
+# NUNCA subir settings.xml con credenciales reales
+settings.xml

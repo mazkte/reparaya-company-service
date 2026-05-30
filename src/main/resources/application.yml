@@ -1,0 +1,62 @@
+server:
+  port: 8083
+
+spring:
+  application:
+    name: company-service
+
+  # ── PostgreSQL (Neon) ──────────────────────────────────────
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://ep-square-rain-apsm8a6h.c-7.us-east-1.aws.neon.tech:5432/repyadb?currentSchema=companies}
+    username: ${DB_USER:neondb_owner}
+    password: ${DB_PASSWORD:npg_SJ4tVEPni8Rw}
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 5
+      connection-timeout: 30000
+
+  jpa:
+    hibernate:
+      ddl-auto: validate          # usa el schema SQL ya creado, no lo genera
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        default_schema: company
+        format_sql: true
+
+  # ── Keycloak OAuth2 Resource Server ───────────────────────
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${KEYCLOAK_URL:http://localhost:8080}/realms/${KEYCLOAK_REALM:reparaya}
+          jwk-set-uri: ${KEYCLOAK_URL:http://localhost:8080}/realms/${KEYCLOAK_REALM:reparaya}/protocol/openid-connect/certs
+
+# ── Actuator ────────────────────────────────────────────────
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+  endpoint:
+    health:
+      show-details: always
+
+# ── OpenAPI / Swagger ────────────────────────────────────────
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+  info:
+    title: ReparaYa — Company Service
+    version: 1.0.0
+    description: Microservicio de gestión de empresas contratadas
+
+# ── Logging ──────────────────────────────────────────────────
+logging:
+  level:
+    pe.edu.reparaya: DEBUG
+    org.springframework.security: INFO
+    org.hibernate.SQL: INFO

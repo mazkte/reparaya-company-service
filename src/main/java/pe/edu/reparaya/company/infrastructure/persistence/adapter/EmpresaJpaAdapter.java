@@ -47,7 +47,7 @@ public class EmpresaJpaAdapter implements EmpresaRepository {
 
     @Override
     public List<EmpresaServicio> buscarDisponiblesPorCategoria(CategoriaEnum categoria) {
-        return jpaRepository.findDisponiblesPorCategoria(categoria)
+        return jpaRepository.findDisponiblesPorCategoria(categoria.name())
                 .stream().map(this::toDomain).toList();
     }
 

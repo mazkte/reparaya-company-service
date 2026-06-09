@@ -22,13 +22,14 @@ public interface EmpresaJpaRepository extends JpaRepository<EmpresaEntity, UUID>
      * Busca empresas activas que tienen capacidad disponible
      * y están especializadas en la categoría indicada.
      */
-    @Query("""
-        SELECT e FROM EmpresaEntity e
-        WHERE e.estado = 'ACTIVA'
-          AND :categoria MEMBER OF e.especialidades
-          AND e.trabajosHoy < e.capacidadDiariaMax
-          AND (e.vigenciaContrato IS NULL OR e.vigenciaContrato >= CURRENT_DATE)
-        ORDER BY e.trabajosHoy ASC
-        """)
-    List<EmpresaEntity> findDisponiblesPorCategoria(@Param("categoria") CategoriaEnum categoria);
+    @Query(value = """
+     SELECT e.* FROM companies.empresa_servicio e
+     INNER JOIN companies.empresa_especialidad es ON es.empresa_id = e.id
+     WHERE e.estado = 'ACTIVA'
+       AND es.categoria = CAST(:categoria AS companies.categoria_enum)
+       AND e.trabajos_hoy < e.capacidad_diaria_max
+       AND (e.vigencia_contrato IS NULL OR e.vigencia_contrato >= CURRENT_DATE)
+     ORDER BY e.trabajos_hoy ASC
+     """, nativeQuery = true)
+    List<EmpresaEntity> findDisponiblesPorCategoria(@Param("categoria") String categoria);
 }

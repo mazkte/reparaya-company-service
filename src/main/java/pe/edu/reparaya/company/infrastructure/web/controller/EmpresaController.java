@@ -48,8 +48,8 @@ public class EmpresaController {
     @Operation(summary = "Obtener empresas disponibles por categoría",
                description = "Retorna empresas activas con capacidad y contrato vigente para la categoría dada")
     public ResponseEntity<List<DisponibilidadResponse>> disponibles(
-            @PathVariable CategoriaEnum categoria) {
-        return ResponseEntity.ok(empresaUseCase.obtenerDisponiblesPorCategoria(categoria));
+            @PathVariable String categoria) {
+        return ResponseEntity.ok(empresaUseCase.obtenerDisponiblesPorCategoria(CategoriaEnum.valueOf(categoria)));
     }
 
     // ── POST /api/companies ───────────────────────────────────

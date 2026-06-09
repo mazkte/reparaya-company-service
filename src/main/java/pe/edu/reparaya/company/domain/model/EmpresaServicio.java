@@ -23,7 +23,6 @@ public class EmpresaServicio {
     private EmpresaEstadoEnum estado;
     private LocalDate    vigenciaContrato;
 
-    // Constructor privado — usar factory methods
     private EmpresaServicio(UUID id, String nombre, String ruc,
                              String emailCoordinador, String whatsappCoordinador,
                              List<CategoriaEnum> especialidades, int capacidadDiariaMax,
@@ -40,8 +39,6 @@ public class EmpresaServicio {
         this.estado              = estado;
         this.vigenciaContrato    = vigenciaContrato;
     }
-
-    // ── Factory methods ──────────────────────────────────────
 
     public static EmpresaServicio crear(String nombre, String ruc,
                                          String emailCoordinador, String whatsappCoordinador,
@@ -61,8 +58,6 @@ public class EmpresaServicio {
         return new EmpresaServicio(id, nombre, ruc, emailCoordinador, whatsappCoordinador,
                 especialidades, capacidadDiariaMax, trabajosHoy, estado, vigenciaContrato);
     }
-
-    // ── Lógica de negocio ────────────────────────────────────
 
     /**
      * Verifica si la empresa puede tomar un trabajo de la categoría dada.
@@ -125,8 +120,6 @@ public class EmpresaServicio {
         if (nuevoCupo < 1) throw new IllegalArgumentException("El cupo debe ser mayor a 0");
         this.capacidadDiariaMax = nuevoCupo;
     }
-
-    // ── Getters ──────────────────────────────────────────────
 
     public UUID   getId()                  { return id; }
     public String getNombre()              { return nombre; }

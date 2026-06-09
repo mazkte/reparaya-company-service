@@ -13,7 +13,7 @@ import java.util.UUID;
 @Entity
 @Table(
     name = "empresa_servicio",
-    schema = "company",
+    schema = "companies",
     uniqueConstraints = @UniqueConstraint(name = "uk_empresa_ruc", columnNames = "ruc")
 )
 @Getter @Setter
@@ -26,7 +26,7 @@ public class EmpresaEntity {
     @Column(name = "id", updatable = false, nullable = false)
     private UUID id;
 
-    @Column(name = "legalEntityName", nullable = false, length = 200)
+    @Column(name = "nombre", nullable = false, length = 200)
     private String nombre;
 
     @Column(name = "ruc", nullable = false, length = 11, unique = true)
@@ -41,7 +41,7 @@ public class EmpresaEntity {
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(
         name = "empresa_especialidad",
-        schema = "company",
+        schema = "companies",
         joinColumns = @JoinColumn(name = "empresa_id")
     )
     @Column(name = "categoria")

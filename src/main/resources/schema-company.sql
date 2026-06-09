@@ -1,25 +1,25 @@
 -- ============================================================
--- ReparaYa — Schema: company
+-- ReparaYa — Schema: companies
 -- Motor: PostgreSQL (Neon Cloud)
 -- Ejecutar antes de levantar company-service
 -- ============================================================
 
 -- Crear schema si no existe
-CREATE SCHEMA IF NOT EXISTS company;
+CREATE SCHEMA IF NOT EXISTS companies;
 
 -- ─── TIPOS ENUMERADOS ────────────────────────────────────────
 
-CREATE TYPE company.empresa_estado_enum AS ENUM (
+CREATE TYPE companies.empresa_estado_enum AS ENUM (
     'ACTIVA', 'INACTIVA', 'SUSPENDIDA'
 );
 
-CREATE TYPE company.categoria_enum AS ENUM (
+    CREATE TYPE companies.categoria_enum AS ENUM (
     'VIALIDAD', 'ALUMBRADO', 'AGUA_POTABLE', 'ALCANTARILLADO', 'OTRO'
 );
 
 -- ─── TABLA: empresa_servicio ─────────────────────────────────
 
-CREATE TABLE IF NOT EXISTS company.empresa_servicio (
+CREATE TABLE IF NOT EXISTS companies.empresa_servicio (
     id                   UUID         PRIMARY KEY DEFAULT gen_random_uuid(),
     nombre               VARCHAR(200) NOT NULL,
     ruc                  VARCHAR(11)  NOT NULL,
@@ -27,7 +27,7 @@ CREATE TABLE IF NOT EXISTS company.empresa_servicio (
     whatsapp_coordinador VARCHAR(20),
     capacidad_diaria_max INTEGER      NOT NULL DEFAULT 5 CHECK (capacidad_diaria_max >= 1),
     trabajos_hoy         INTEGER      NOT NULL DEFAULT 0 CHECK (trabajos_hoy >= 0),
-    estado               company.empresa_estado_enum NOT NULL DEFAULT 'ACTIVA',
+    estado               companies.empresa_estado_enum NOT NULL DEFAULT 'ACTIVA',
     vigencia_contrato    DATE,
     fecha_creacion       TIMESTAMP    NOT NULL DEFAULT NOW(),
     fecha_actualizacion  TIMESTAMP    NOT NULL DEFAULT NOW(),
@@ -37,26 +37,26 @@ CREATE TABLE IF NOT EXISTS company.empresa_servicio (
 
 -- ─── TABLA: empresa_especialidad (colección de especialidades) ─
 
-CREATE TABLE IF NOT EXISTS company.empresa_especialidad (
-    empresa_id UUID                    NOT NULL REFERENCES company.empresa_servicio(id) ON DELETE CASCADE,
-    categoria  company.categoria_enum  NOT NULL,
+CREATE TABLE IF NOT EXISTS companies.empresa_especialidad (
+    empresa_id UUID                    NOT NULL REFERENCES companies.empresa_servicio(id) ON DELETE CASCADE,
+    categoria  companies.categoria_enum  NOT NULL,
     PRIMARY KEY (empresa_id, categoria)
 );
 
 -- ─── ÍNDICES ─────────────────────────────────────────────────
 
 CREATE INDEX IF NOT EXISTS idx_empresa_estado
-    ON company.empresa_servicio(estado);
+    ON companies.empresa_servicio(estado);
 
 CREATE INDEX IF NOT EXISTS idx_empresa_vigencia
-    ON company.empresa_servicio(vigencia_contrato);
+    ON companies.empresa_servicio(vigencia_contrato);
 
 CREATE INDEX IF NOT EXISTS idx_especialidad_categoria
-    ON company.empresa_especialidad(categoria);
+    ON companies.empresa_especialidad(categoria);
 
 -- ─── FUNCIÓN: actualizar fecha_actualizacion automáticamente ──
 
-CREATE OR REPLACE FUNCTION company.update_timestamp()
+CREATE OR REPLACE FUNCTION companies.update_timestamp()
 RETURNS TRIGGER AS $$
 BEGIN
     NEW.fecha_actualizacion = NOW();
@@ -65,12 +65,12 @@ END;
 $$ LANGUAGE plpgsql;
 
 CREATE TRIGGER trg_empresa_update
-    BEFORE UPDATE ON company.empresa_servicio
-    FOR EACH ROW EXECUTE FUNCTION company.update_timestamp();
+    BEFORE UPDATE ON companies.empresa_servicio
+    FOR EACH ROW EXECUTE FUNCTION companies.update_timestamp();
 
 -- ─── DATOS INICIALES (seeds para desarrollo) ─────────────────
 
-INSERT INTO company.empresa_servicio
+INSERT INTO companies.empresa_servicio
     (id, nombre, ruc, email_coordinador, whatsapp_coordinador,
      capacidad_diaria_max, trabajos_hoy, estado, vigencia_contrato)
 VALUES
@@ -95,7 +95,7 @@ VALUES
      12, 0, 'ACTIVA', '2025-09-30')
 ON CONFLICT (ruc) DO NOTHING;
 
-INSERT INTO company.empresa_especialidad (empresa_id, categoria)
+INSERT INTO companies.empresa_especialidad (empresa_id, categoria)
 VALUES
     ('11111111-1111-1111-1111-111111111111', 'VIALIDAD'),
     ('22222222-2222-2222-2222-222222222222', 'ALUMBRADO'),

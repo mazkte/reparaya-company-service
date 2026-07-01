@@ -7,9 +7,9 @@ spring:
 
   # ── PostgreSQL (Neon) ──────────────────────────────────────
   datasource:
-    url: ${DB_URL:jdbc:postgresql://ep-square-rain-apsm8a6h.c-7.us-east-1.aws.neon.tech:5432/repyadb?currentSchema=companies}
-    username: ${DB_USER:neondb_owner}
-    password: ${DB_PASSWORD:npg_SJ4tVEPni8Rw}
+    url: ${DB_URL}
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
     driver-class-name: org.postgresql.Driver
     hikari:
       maximum-pool-size: 5
@@ -30,8 +30,8 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: ${KEYCLOAK_URL:http://localhost:8080}/realms/${KEYCLOAK_REALM:reparaya}
-          jwk-set-uri: ${KEYCLOAK_URL:http://localhost:8080}/realms/${KEYCLOAK_REALM:reparaya}/protocol/openid-connect/certs
+          issuer-uri: ${KEYCLOAK_URL}/realms/${KEYCLOAK_REALM}
+          jwk-set-uri: ${KEYCLOAK_URL}/realms/${KEYCLOAK_REALM}/protocol/openid-connect/certs
 
 # ── Actuator ────────────────────────────────────────────────
 management:

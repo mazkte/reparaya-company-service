@@ -14,7 +14,7 @@ public class CompanyDtos {
 
    @NotBlank(message = "El legalEntityName is required")
    @Size(max = 200)
-   String legalEntityName,
+   String nombre,
 
    @NotBlank(message = "El RUC is required")
    @Pattern(regexp = "^\\d{11}$", message = "RUC has debe tener 11 dígitos")
@@ -22,7 +22,7 @@ public class CompanyDtos {
 
    @NotBlank(message = "El email del coordinador es requerido")
    @Email(message = "Email inválido")
-   String coordinatorEmail,
+   String emailCoordinador,
 
    String whatsappCoordinador,
 

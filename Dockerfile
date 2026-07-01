@@ -37,11 +37,11 @@ WORKDIR /app
 # Copiar el jar desde el stage de build
 COPY --from=builder /build/target/reparaya-company-service-*.jar app.jar
 
-# Cambiar al usuario no-root
+# Cambiar al user no-root
 USER reparaya
 
 # Puerto expuesto
-EXPOSE 8083
+EXPOSE 8080
 
 # Health check — usa el endpoint de Actuator
 HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
@@ -50,7 +50,7 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
 # Variables de entorno con valores por defecto (se sobreescriben en docker-compose)
 ENV JAVA_OPTS="-Xms256m -Xmx512m" \
     SPRING_PROFILES_ACTIVE="prod" \
-    SERVER_PORT=8083
+    SERVER_PORT=8080
 
 # Arrancar la aplicación
 ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -jar app.jar"]

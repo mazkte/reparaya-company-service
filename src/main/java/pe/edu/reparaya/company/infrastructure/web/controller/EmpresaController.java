@@ -23,8 +23,6 @@ public class EmpresaController {
 
     private final EmpresaUseCase empresaUseCase;
 
-    // ── GET /api/companies ────────────────────────────────────
-
     @GetMapping
     @PreAuthorize("hasAnyRole('ROLE_AUTORIDAD', 'ROLE_ADMIN', 'ROLE_SUPERVISOR')")
     @Operation(summary = "Listar todas las empresas")
@@ -32,16 +30,12 @@ public class EmpresaController {
         return ResponseEntity.ok(empresaUseCase.listarTodas());
     }
 
-    // ── GET /api/companies/{id} ───────────────────────────────
-
     @GetMapping("/{id}")
     @PreAuthorize("hasAnyRole('ROLE_AUTORIDAD', 'ROLE_ADMIN', 'ROLE_SUPERVISOR', 'ROLE_EMPRESA')")
     @Operation(summary = "Obtener empresa por ID")
     public ResponseEntity<EmpresaResponse> obtenerPorId(@PathVariable UUID id) {
         return ResponseEntity.ok(empresaUseCase.obtenerPorId(id));
     }
-
-    // ── GET /api/companies/available/{categoria} ──────────────
 
     @GetMapping("/available/{categoria}")
     @PreAuthorize("hasAnyRole('ROLE_AUTORIDAD', 'ROLE_ADMIN')")
@@ -52,8 +46,6 @@ public class EmpresaController {
         return ResponseEntity.ok(empresaUseCase.obtenerDisponiblesPorCategoria(CategoriaEnum.valueOf(categoria)));
     }
 
-    // ── POST /api/companies ───────────────────────────────────
-
     @PostMapping
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @Operation(summary = "Registrar nueva empresa contratada")
@@ -62,8 +54,6 @@ public class EmpresaController {
         EmpresaResponse response = empresaUseCase.crearEmpresa(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
-
-    // ── PATCH /api/companies/{id}/quota ──────────────────────
 
     @PatchMapping("/{id}/quota")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
@@ -74,8 +64,6 @@ public class EmpresaController {
         return ResponseEntity.ok(empresaUseCase.actualizarCupo(id, request));
     }
 
-    // ── PATCH /api/companies/{id}/status ─────────────────────
-
     @PatchMapping("/{id}/status")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @Operation(summary = "Cambiar estado de la empresa (ACTIVA | INACTIVA | SUSPENDIDA)")
@@ -85,9 +73,6 @@ public class EmpresaController {
         return ResponseEntity.ok(empresaUseCase.cambiarEstado(id, request));
     }
 
-    // ── POST /api/companies/{id}/increment-load ───────────────
-    // Llamado internamente por worker-service cuando asigna un trabajo
-
     @PostMapping("/{id}/increment-load")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_AUTORIDAD')")
     @Operation(summary = "Incrementar carga diaria (uso interno de worker-service)")
@@ -95,8 +80,6 @@ public class EmpresaController {
         empresaUseCase.incrementarCarga(id);
         return ResponseEntity.noContent().build();
     }
-
-    // ── POST /api/companies/{id}/decrement-load ───────────────
 
     @PostMapping("/{id}/decrement-load")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_AUTORIDAD')")

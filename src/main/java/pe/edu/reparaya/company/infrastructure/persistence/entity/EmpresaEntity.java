@@ -2,6 +2,8 @@ package pe.edu.reparaya.company.infrastructure.persistence.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 import pe.edu.reparaya.company.domain.model.CategoriaEnum;
 import pe.edu.reparaya.company.domain.model.EmpresaEstadoEnum;
 
@@ -54,8 +56,9 @@ public class EmpresaEntity {
     @Column(name = "trabajos_hoy", nullable = false)
     private int trabajosHoy;
 
-    @Column(name = "estado", nullable = false)
     @Enumerated(EnumType.STRING)
+    @JdbcTypeCode(SqlTypes.NAMED_ENUM)
+    @Column(name = "estado", nullable = false)
     private EmpresaEstadoEnum estado;
 
     @Column(name = "vigencia_contrato")

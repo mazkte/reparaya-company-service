@@ -29,8 +29,8 @@ public class EmpresaUseCase {
   }
 
   EmpresaServicio empresa = EmpresaServicio.crear(
-    request.legalEntityName(), request.ruc(),
-    request.coordinatorEmail(), request.whatsappCoordinador(),
+    request.nombre(), request.ruc(),
+    request.emailCoordinador(), request.whatsappCoordinador(),
     request.especialidades(), request.capacidadDiariaMax(),
     request.vigenciaContrato()
   );

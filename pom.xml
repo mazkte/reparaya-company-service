@@ -14,7 +14,7 @@
     </parent>
 
     <groupId>pe.edu.reparaya</groupId>
-    <artifactId>repya-company-service</artifactId>
+    <artifactId>reparaya-company-service</artifactId>
     <version>1.0.0</version>
     <packaging>jar</packaging>
 

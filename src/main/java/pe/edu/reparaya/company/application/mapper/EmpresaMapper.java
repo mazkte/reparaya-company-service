@@ -14,12 +14,12 @@ public interface EmpresaMapper {
  @Mapping(target = "porcentajeCarga", expression = "java(empresa.porcentajeCarga())")
  @Mapping(target = "contratoVigente", expression = "java(empresa.contratoVigente())")
  @Mapping(target = "contratoVenceProximamente", expression = "java(empresa.contratoVenceProximamente(30))")
- @Mapping(target = "id", source = "id")
  EmpresaResponse toResponse(EmpresaServicio empresa);
 
  List<EmpresaResponse> toResponseList(List<EmpresaServicio> empresas);
 
  @Mapping(target = "porcentajeCarga", expression = "java(empresa.porcentajeCarga())")
+ @Mapping(target = "empresaId", source = "id")
  DisponibilidadResponse toDisponibilidadResponse(EmpresaServicio empresa);
 
  List<DisponibilidadResponse> toDisponibilidadList(List<EmpresaServicio> empresas);
